@@ -89,17 +89,17 @@ const Template = () => {
   }, []);
   return (
     <Container
-      maxWidth="lg"
       sx={{
         backgroundColor: "#ffffff",
         boxShadow: 5,
         borderRadius: 4,
-        p:2,
+        p: 2,
         animation: "fadeIn 1s ease-in-out",
         "@keyframes fadeIn": {
           "0%": { opacity: 0, transform: "translateY(10px)" },
           "100%": { opacity: 1, transform: "translateY(0)" },
-        },mt:3
+        },
+        mt: 3,
       }}
     >
       <Typography
@@ -107,7 +107,7 @@ const Template = () => {
         textAlign="center"
         gutterBottom
         sx={{
-          fontWeight: 'bold',
+          fontWeight: "bold",
           color: "primary.main",
         }}
       >

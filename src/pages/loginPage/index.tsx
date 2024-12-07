@@ -1,12 +1,12 @@
-import Header from "@/PageComponents/components/Header";
 import { LoginComponent } from "@/PageComponents/components/LoginForm";
+import PublicHeader from "@/PageComponents/components/PublicHeader";
 import { Box, Container, Paper, Typography, Divider } from "@mui/material";
 import React from "react";
 
 const LoginPage = () => {
   return (
     <Box>
-      <Header page={'Login'} />
+      <PublicHeader />
       <Box
         sx={{
           background: "linear-gradient(to right, #00004f,#000 )",
