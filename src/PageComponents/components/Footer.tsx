@@ -15,7 +15,7 @@ import TwitterIcon from "@mui/icons-material/Twitter";
 export const Footer = () => {
   return (
     <Box sx={{ backgroundColor: "secondary.main", color: "#fff", pt: 4 }}>
-      <Container maxWidth="lg">
+      <Container>
         <Grid2 container spacing={4}>
           <Grid2 size={{ xs: 12, sm: 4 }}>
             <Typography variant="h6" gutterBottom>
@@ -50,23 +50,23 @@ export const Footer = () => {
                 {[
                   {
                     id: 1,
-                    src: <TwitterIcon sx={{color:'#fff'}} />,
+                    src: <TwitterIcon sx={{ color: "#fff" }} />,
                     link: "#",
                   },
 
                   {
                     id: 2,
-                    src: <LinkedInIcon sx={{color:'#fff'}}/>,
+                    src: <LinkedInIcon sx={{ color: "#fff" }} />,
                     link: "#",
                   },
                   {
                     id: 3,
-                    src: <FacebookRoundedIcon sx={{color:'#fff'}}/>,
+                    src: <FacebookRoundedIcon sx={{ color: "#fff" }} />,
                     link: "#",
                   },
                   {
                     id: 4,
-                    src: <InstagramIcon sx={{color:'#fff'}}/>,
+                    src: <InstagramIcon sx={{ color: "#fff" }} />,
                     link: "#",
                   },
                 ].map((item) => (

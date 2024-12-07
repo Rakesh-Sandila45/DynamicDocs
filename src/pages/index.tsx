@@ -15,7 +15,6 @@ import {
   Icon,
   IconButton,
 } from "@mui/material";
-import Header from "@/PageComponents/components/Header";
 import { Footer } from "@/PageComponents/components/Footer";
 import Image from "next/image";
 import { useCustomRouter } from "@/customHooks/useCustomRouter";
@@ -32,13 +31,14 @@ import {
   Settings,
   Download,
 } from "@mui/icons-material";
+import PublicHeader from "@/PageComponents/components/PublicHeader";
 
 const HomePage: React.FC = () => {
   const router = useCustomRouter();
 
   return (
     <Box>
-      <Header page={"HomePage"} />
+      <PublicHeader />
       {/* Hero Section */}
       <Box
         sx={{
@@ -54,7 +54,7 @@ const HomePage: React.FC = () => {
           alignItems: "center",
         }}
       >
-        <Container maxWidth="lg">
+        <Container>
           <Typography variant="h2" fontWeight="bold" gutterBottom>
             Effortlessly Generate Dynamic PDFs with Your Templates!
           </Typography>
@@ -80,7 +80,7 @@ const HomePage: React.FC = () => {
 
       {/* How It Works */}
       <Box sx={{ py: 8, backgroundColor: "#ffffff" }}>
-        <Container maxWidth="lg">
+        <Container>
           <Typography
             variant="h4"
             fontWeight="bold"
@@ -153,7 +153,7 @@ const HomePage: React.FC = () => {
 
       {/* Features Section */}
       <Box sx={{ py: 8, backgroundColor: "#f9f9f9" }}>
-        <Container maxWidth="lg">
+        <Container>
           <Typography
             variant="h4"
             fontWeight="bold"
@@ -246,7 +246,7 @@ const HomePage: React.FC = () => {
 
       {/* Testimonials */}
       <Box sx={{ py: 8, backgroundColor: "#ffffff" }}>
-        <Container maxWidth="lg">
+        <Container>
           <Typography
             variant="h4"
             fontWeight="bold"

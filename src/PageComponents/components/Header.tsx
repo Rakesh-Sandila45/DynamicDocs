@@ -13,10 +13,9 @@ import { onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { firebaseAuth } from "@/pages/_app";
 
-function ResponsiveAppBar(props: any) {
+function ResponsiveAppBar() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const { page } = props;
   const router = useCustomRouter();
   const onSignOutClick = () => {
     const auth = getAuth();
