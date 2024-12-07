@@ -276,7 +276,11 @@ const HomePage: React.FC = () => {
                 text: "The ease of use and customization options in DynamicDocs are phenomenal. It streamlined our document processes and saved us tons of time.",
               },
             ].map((testimonial, index) => (
-              <Grid2 size={{ xs: 12, sm: 6, md: 4 }} key={index}>
+              <Grid2
+                size={{ xs: 12, sm: 6, md: 4 }}
+                sx={{ display: "flex", justifyContent: "center" }}
+                key={index}
+              >
                 <Card sx={{ maxWidth: 345, boxShadow: 3 }}>
                   <CardHeader
                     avatar={
@@ -311,40 +315,50 @@ const HomePage: React.FC = () => {
             justifyContent: "space-between",
           }}
         >
-          <Image
-            src="/faq.jpg"
-            alt="FAQ'S"
-            height={500}
-            width={500}
-            style={{ width: "100%", height: "auto" }}
-          />
-          <List sx={{ maxWidth: 800, mx: "auto", mt: 4 }}>
-            {[
-              {
-                question: "What kind of documents can I create?",
-                answer:
-                  "You can create any kind of documents, including offer letters, termination letters, and contracts.",
-              },
-              {
-                question: "How do I get started?",
-                answer:
-                  "Simply sign up with your mobile number, and we'll help you upload your templates and create dynamic PDFs.",
-              },
-              {
-                question: "Can I include images and signatures?",
-                answer:
-                  "Yes, our system supports adding images, logos, and signatures.",
-              },
-            ].map((faq, index) => (
-              <ListItem key={index} sx={{ mb: 2 }}>
-                <ListItemText
-                  primary={faq.question}
-                  secondary={faq.answer}
-                  primaryTypographyProps={{ fontWeight: "bold" }}
-                />
-              </ListItem>
-            ))}
-          </List>
+          <Grid2 container>
+            <Grid2
+              size={{ xs: 12, sm: 6 }}
+              sx={{ display: "flex", alignItems: "center" }}
+            >
+              {" "}
+              <Image
+                src="/faq.jpg"
+                alt="FAQ'S"
+                height={500}
+                width={500}
+                style={{ width: "100%", height: "auto" }}
+              />
+            </Grid2>
+            <Grid2 size={{ xs: 12, sm: 6 }}>
+              <List sx={{ maxWidth: 800, mx: "auto", mt: 4 }}>
+                {[
+                  {
+                    question: "What kind of documents can I create?",
+                    answer:
+                      "You can create any kind of documents, including offer letters, termination letters, and contracts.",
+                  },
+                  {
+                    question: "How do I get started?",
+                    answer:
+                      "Simply sign up with your mobile number, and we'll help you upload your templates and create dynamic PDFs.",
+                  },
+                  {
+                    question: "Can I include images and signatures?",
+                    answer:
+                      "Yes, our system supports adding images, logos, and signatures.",
+                  },
+                ].map((faq, index) => (
+                  <ListItem key={index} sx={{ mb: 2 }}>
+                    <ListItemText
+                      primary={faq.question}
+                      secondary={faq.answer}
+                      primaryTypographyProps={{ fontWeight: "bold" }}
+                    />
+                  </ListItem>
+                ))}
+              </List>
+            </Grid2>
+          </Grid2>
         </Container>
       </Box>
       {/* Footer */}
