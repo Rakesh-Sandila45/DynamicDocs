@@ -3,6 +3,8 @@ import type { AppProps } from "next/app";
 import { ThemeProvider } from "@mui/material/styles";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import "react-toastify/dist/ReactToastify.css";
+import { CacheProvider, EmotionCache } from "@emotion/react";
+import createEmotionCache from "../createEmotionCache";
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
@@ -14,6 +16,9 @@ import { setAuthToken } from "@/axios";
 import { ToastContainer } from "react-toastify";
 import { CssBaseline } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
+import Head from "next/head";
+const clientSideEmotionCache = createEmotionCache();
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -33,7 +38,11 @@ const firebaseConfig = {
 export const firebaseApp = initializeApp(firebaseConfig);
 export const firebaseAuth = getAuth(firebaseApp);
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({
+  Component,
+  pageProps,
+  emotionCache = clientSideEmotionCache,
+}: AppProps & AppProps & { emotionCache?: EmotionCache | undefined }) {
   const setAuthenticationState = () => {
     firebaseAuth.currentUser
       ?.getIdToken(true)
@@ -56,23 +65,30 @@ export default function App({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <ThemeProvider theme={getTheme()}>
-      <CssBaseline />
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
-      <LocalizationProvider dateAdapter={AdapterMoment}>
-        <Component {...pageProps} />
-      </LocalizationProvider>
-    </ThemeProvider>
+    <CacheProvider value={emotionCache}>
+      <Head>
+        <meta name="viewport" content="initial-scale=1, width=device-width" />
+        <title>Dynamic Docs</title>
+        <link rel="shortcut icon" href={"/favicon.ico"} />
+      </Head>
+      <ThemeProvider theme={getTheme()}>
+        <CssBaseline />
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
+        <LocalizationProvider dateAdapter={AdapterMoment}>
+          <Component {...pageProps} />
+        </LocalizationProvider>
+      </ThemeProvider>
+    </CacheProvider>
   );
 }
