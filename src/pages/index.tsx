@@ -67,11 +67,16 @@ const HomePage: React.FC = () => {
               variant="contained"
               size="large"
               onClick={() => router.push("/loginPage")}
-              sx={{ mr: 2 }}
+              sx={{ mr: 2, fontSize: { xs: "13px", sm: "18px" } }}
             >
               Get Started
             </Button>
-            <Button variant="contained" size="large">
+            <Button
+              variant="contained"
+              size="large"
+              onClick={() => router.push("/aboutUsPage")}
+              sx={{ fontSize: { xs: "13px", sm: "18px" } }}
+            >
               Learn More
             </Button>
           </Box>

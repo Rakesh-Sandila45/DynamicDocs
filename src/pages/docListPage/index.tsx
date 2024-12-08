@@ -81,7 +81,7 @@ const DocumentsList = () => {
           <Paper
             elevation={10}
             sx={{
-              padding: 4,
+              padding: { xs: 2, sm: 4 },
               borderRadius: 3,
               background: "#ffffff",
               boxShadow: "0 8px 24px rgba(0, 0, 0, 0.2)",
@@ -125,7 +125,7 @@ const DocumentsList = () => {
               >
                 <FormLabel
                   sx={{
-                    fontSize: "30px",
+                    fontSize: { xs: "25px", sm: "30px" },
                     fontWeight: "bold",
                     color: "primary.main",
                     mb: 2,
@@ -148,7 +148,7 @@ const DocumentsList = () => {
                       label={item}
                       sx={{
                         "& .MuiFormControlLabel-label": {
-                          fontSize: "30px",
+                          fontSize: { xs: "20px", sm: "30px" },
                         },
                       }}
                     />

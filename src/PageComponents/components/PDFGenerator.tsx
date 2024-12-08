@@ -31,7 +31,7 @@ const PdfCard = (props: any) => {
         <Button
           variant="contained"
           color="primary"
-          sx={{ mr: 2 }}
+          sx={{ mr: 2, fontSize: { xs: "10px", sm: "13px" } }}
           endIcon={<DownloadIcon sx={{ fontSize: 14 }} />}
           // onChange={trackDownloads}
         >
@@ -54,19 +54,15 @@ const PdfCard = (props: any) => {
             <a href={url} target="_blank" rel="noreferrer">
               <Button
                 variant="contained"
+                sx={{ fontSize: { xs: "10px", sm: "13px" } }}
                 endIcon={<LocalPrintshopIcon sx={{ fontSize: 14 }} />}
               >
-                Print/Preview
+                {/* Print/Preview */}
+                Preview
               </Button>
             </a>
           ) : (
-            <Button
-              variant="contained"
-              disabled
-              endIcon={<LocalPrintshopIcon sx={{ fontSize: 14 }} />}
-            >
-              Print/Preview
-            </Button>
+            <></>
           )
         }
       </BlobProvider>

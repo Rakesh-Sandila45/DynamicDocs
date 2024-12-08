@@ -108,6 +108,7 @@ function PublicHeader() {
                 <Button
                   variant="contained"
                   color="secondary"
+                  sx={{ fontSize: { xs: "13px", sm: "15px" } }}
                   onClick={() => router.push("/loginPage")}
                 >
                   Login
@@ -116,6 +117,7 @@ function PublicHeader() {
                 <Button
                   color="secondary"
                   variant="contained"
+                  sx={{ fontSize: { xs: "13px", sm: "15px" } }}
                   onClick={onSignOutClick}
                 >
                   Logout

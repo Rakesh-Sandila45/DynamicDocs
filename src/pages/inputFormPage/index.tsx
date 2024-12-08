@@ -16,7 +16,8 @@ const FormPage = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          height: "100vh",
+          minHeight: "100vh",
+          pt: { xs: 8, sm: 1 },
         }}
       >
         {/* pass the documentType to get inputForms different documentType could have same InputForm */}

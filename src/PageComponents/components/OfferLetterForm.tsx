@@ -100,6 +100,7 @@ const Template = () => {
           "100%": { opacity: 1, transform: "translateY(0)" },
         },
         mt: 3,
+        m: 1,
       }}
     >
       <Typography
@@ -114,7 +115,11 @@ const Template = () => {
         Offer Letter Form
       </Typography>
       <form onSubmit={formik.handleSubmit}>
-        <Grid2 container spacing={2} sx={{ mt: 5, p: 5 }}>
+        <Grid2
+          container
+          spacing={2}
+          sx={{ mt: { sm: 5 }, p: { xs: 2, sm: 5 } }}
+        >
           <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
             <TextField
               id="documentName"
