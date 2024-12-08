@@ -146,7 +146,7 @@ const OfferLetter = (props: any) => {
   });
   const ctcBreakdown = efundzzCtcBreakUp(values.ctc);
 
- const Footer = () => {
+  const Footer = () => {
     return (
       <View style={styles.footer}>
         <View style={[styles.section, { marginBottom: "10px" }]}>
@@ -168,8 +168,8 @@ const OfferLetter = (props: any) => {
                   textAlign: "center",
                 }}
               >
-                2nd Floor, Trendz Solitaire Near Westin Hotel, Gafoor Nagar,
-                Hitechcity, Hyderabad
+                2nd Floor, Patancheru Near Westin Hotel,502296 BeeramGuda,
+                Hyderabad
               </Text>
             </View>
             <View style={styles.footerIconBox}>
@@ -183,7 +183,7 @@ const OfferLetter = (props: any) => {
                   textAlign: "center",
                 }}
               >
-                +91-9081-797979
+                +91-9705-359982
               </Text>
             </View>
             <View style={styles.footerIconBox}>
@@ -197,7 +197,7 @@ const OfferLetter = (props: any) => {
                   textAlign: "center",
                 }}
               >
-                hr@efundzz.com
+                hr@dynamicDocs.com
               </Text>
             </View>
             <View style={styles.footerIconBox}>
@@ -211,7 +211,7 @@ const OfferLetter = (props: any) => {
                   textAlign: "center",
                 }}
               >
-                www.efundzz.com
+                www.dynamicdocs.com
               </Text>
             </View>
           </View>
@@ -228,7 +228,7 @@ const OfferLetter = (props: any) => {
           style={{
             height: 40,
             width: "100%",
-            backgroundColor: "#F77307",
+            backgroundColor: "#000",
           }}
           fixed
         ></Text>
@@ -247,12 +247,12 @@ const OfferLetter = (props: any) => {
             marginBottom: 10,
           }}
         >
-          <Image src="/icons/logo.png" style={styles.logo} />
+          <Image src="/vercel.svg" style={styles.logo} />
           <Text
             style={{
               height: 40,
               width: 200,
-              backgroundColor: "#F77307",
+              backgroundColor: "#000",
             }}
           ></Text>
         </View>
@@ -267,12 +267,12 @@ const OfferLetter = (props: any) => {
             Dear <Text style={styles.boldtext}>{values.name},</Text>
           </Text>
           <Text style={styles.paragraph}>
-            It gives us immense pleasure in inviting you to join “Efund
+            It gives us immense pleasure in inviting you to join “dynamicDocs
             Technical Services Private Limited.” as one of its valuable members.
             We strongly believe that all our employees are truly our Associates.
             We are happy that you are one such associate joining us in our
             effort to create a true corporation. You will be working at the
-            location <Text style={styles.boldtext}> “Efund”</Text> office{" "}
+            location <Text style={styles.boldtext}> “dynamicDocs”</Text> office{" "}
             <Text style={styles.boldtext}> {values.jobLocation}.</Text>
           </Text>
           <Text style={styles.paragraph}>
@@ -312,9 +312,10 @@ const OfferLetter = (props: any) => {
           <Text style={styles.paragraph}>
             We welcome you and are delighted that you have chosen to be part of
             our team. We hope your association with us will be mutually
-            beneficial, pleasant and fulfilling. While welcoming you to Efund,
-            we are confident that you will contribute to the organization and
-            its goals, add value through your efforts and strengthen Efund.
+            beneficial, pleasant and fulfilling. While welcoming you to
+            dynamicDocs, we are confident that you will contribute to the
+            organization and its goals, add value through your efforts and
+            strengthen dynamicDocs.
           </Text>
         </View>
         <View style={styles.section}>
@@ -322,10 +323,10 @@ const OfferLetter = (props: any) => {
         </View>
         <View style={styles.section}>
           <Text style={{ marginBottom: 5 }}>
-            For Efund Technical Services Private Limited
+            For dynamicDocs Technical Services Private Limited
           </Text>
           {/* <Image src="/icons/signature.png" style={styles.signature} /> */}
-          <Image src="/icons/logo.png" style={styles.logo} />
+          <Image src="/vercel.svg" style={styles.logo} />
         </View>
         <View style={styles.section}>
           <Text>Authorized Signatory</Text>
@@ -347,12 +348,12 @@ const OfferLetter = (props: any) => {
             marginBottom: 10,
           }}
         >
-          <Image src="/icons/logo.png" style={styles.logo} />
+          <Image src="/vercel.svg" style={styles.logo} />
           <Text
             style={{
               height: 40,
               width: 200,
-              backgroundColor: "#F77307",
+              backgroundColor: "#000",
             }}
           ></Text>
         </View>
