@@ -1,6 +1,6 @@
 import OfferLetter from "./DocumentComponents/OfferLetter";
 import OfferLetterForm from "./PageComponents/components/OfferLetterForm";
-import baseTheme from './themes/baseTheme'
+import baseTheme from "./themes/baseTheme";
 export const efundzzCtcBreakUp = (yearlyCTC: number) => {
   const yearlyBasicSalary = (54 / 100) * yearlyCTC;
   const yearlyHRA = (27 / 100) * yearlyCTC;
@@ -57,7 +57,7 @@ export const getTemplate = (documentType: string, values: any) => {
 
 export const getDocumentname = (
   documentType: string,
-  name: string,
+  name: string
   // month: any,
   // year: any
 ) => {
