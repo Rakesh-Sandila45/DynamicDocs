@@ -63,6 +63,7 @@ function ResponsiveAppBar() {
               <Button
                 color="secondary"
                 variant="contained"
+                sx={{ fontSize: { xs: "13px", sm: "18px" } }}
                 onClick={() => router.push("/loginPage")}
               >
                 <Typography>Login</Typography>
@@ -71,6 +72,7 @@ function ResponsiveAppBar() {
               <Button
                 color="secondary"
                 variant="contained"
+                sx={{ fontSize: { xs: "13px", sm: "18px" } }}
                 onClick={onSignOutClick}
               >
                 <Typography>Logout</Typography>

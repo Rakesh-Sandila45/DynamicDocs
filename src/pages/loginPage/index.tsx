@@ -33,7 +33,7 @@ const LoginPage = () => {
           <Paper
             elevation={10}
             sx={{
-              padding: 4,
+              padding: { xs: 2, sm: 4 },
               borderRadius: 3,
               background: "#ffffff",
               boxShadow: "0 8px 24px rgba(0, 0, 0, 0.2)",
