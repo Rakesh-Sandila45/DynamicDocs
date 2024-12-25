@@ -88,21 +88,7 @@ const Template = () => {
     formik.validateForm();
   }, []);
   return (
-    <Container
-      sx={{
-        backgroundColor: "#ffffff",
-        boxShadow: 5,
-        borderRadius: 4,
-        p: 2,
-        animation: "fadeIn 1s ease-in-out",
-        "@keyframes fadeIn": {
-          "0%": { opacity: 0, transform: "translateY(10px)" },
-          "100%": { opacity: 1, transform: "translateY(0)" },
-        },
-        mt: 3,
-        m: 1,
-      }}
-    >
+    <Box>
       <Typography
         variant="h4"
         textAlign="center"
@@ -115,11 +101,7 @@ const Template = () => {
         Offer Letter Form
       </Typography>
       <form onSubmit={formik.handleSubmit}>
-        <Grid2
-          container
-          spacing={2}
-          sx={{ mt: { sm: 5 }, p: { xs: 2, sm: 5 } }}
-        >
+        <Grid2 container spacing={2} sx={{ mt: { sm: 5 } }}>
           <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
             <TextField
               id="documentName"
@@ -317,7 +299,7 @@ const Template = () => {
           </Dialog>
         </React.Fragment>
       </form>
-    </Container>
+    </Box>
   );
 };
 export default Template;

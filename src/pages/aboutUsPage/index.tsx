@@ -17,7 +17,7 @@ const AboutUs = () => {
   const router = useCustomRouter();
   return (
     <Box sx={{ bgcolor: "#00004f17" }}>
-      <Container sx={{ pt: { xs: 8, sm: 10 }, mb: 5 }}>
+      <Box sx={{ pt: { xs: 8, sm: 10 }, mb: 5, px: 5 }}>
         {/* Mission Section */}
         <PublicHeader />
         <Box mb={5}>
@@ -179,7 +179,7 @@ const AboutUs = () => {
             Join US Now
           </Button>
         </Box>
-      </Container>
+      </Box>
       <Footer />
     </Box>
   );
