@@ -66,7 +66,7 @@ export function RegistrationForm() {
           sx={{ height: "100vh", display: "flex", alignItems: "end" }}
         >
           <Image
-            src={"/assets/registrationbnner.png"}
+            src={"/assets/registrationBanner.png"}
             alt={""}
             height={500}
             width={500}

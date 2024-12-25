@@ -15,7 +15,7 @@ const LoginPage = () => {
       >
         <Grid2 size={{ xs: 12, sm: 6 }} sx={{ mt: { xs: 8, sm: 0 } }}>
           <Image
-            src={"/assets/loginbanner.png"}
+            src={"/assets/loginBanner.png"}
             alt={""}
             height={500}
             width={500}
