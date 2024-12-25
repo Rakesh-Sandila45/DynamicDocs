@@ -54,7 +54,7 @@ const HomePage: React.FC = () => {
           alignItems: "center",
         }}
       >
-        <Container>
+        <Box>
           <Typography variant="h2" fontWeight="bold" gutterBottom>
             Effortlessly Generate Dynamic PDFs with Your Templates!
           </Typography>
@@ -66,7 +66,7 @@ const HomePage: React.FC = () => {
             <Button
               variant="contained"
               size="large"
-              onClick={() => router.push("/loginPage")}
+              onClick={() => router.push("/addDocuments")}
               sx={{ mr: 2, fontSize: { xs: "13px", sm: "18px" } }}
             >
               Get Started
@@ -80,12 +80,12 @@ const HomePage: React.FC = () => {
               Learn More
             </Button>
           </Box>
-        </Container>
+        </Box>
       </Box>
 
       {/* How It Works */}
-      <Box sx={{ py: 8, backgroundColor: "#ffffff" }}>
-        <Container>
+      <Box sx={{ py: 8, backgroundColor: "#ffffff", px: 5 }}>
+        <Box>
           <Typography
             variant="h4"
             fontWeight="bold"
@@ -153,12 +153,12 @@ const HomePage: React.FC = () => {
               </Grid2>
             ))}
           </Grid2>
-        </Container>
+        </Box>
       </Box>
 
       {/* Features Section */}
-      <Box sx={{ py: 8, backgroundColor: "#f9f9f9" }}>
-        <Container>
+      <Box sx={{ py: 8, backgroundColor: "#f9f9f9", px: 5 }}>
+        <Box>
           <Typography
             variant="h4"
             fontWeight="bold"
@@ -246,12 +246,12 @@ const HomePage: React.FC = () => {
               </Grid2>
             ))}
           </Grid2>
-        </Container>
+        </Box>
       </Box>
 
       {/* Testimonials */}
       <Box sx={{ py: 8, backgroundColor: "#ffffff" }}>
-        <Container>
+        <Box>
           <Typography
             variant="h4"
             fontWeight="bold"
@@ -307,17 +307,16 @@ const HomePage: React.FC = () => {
               </Grid2>
             ))}
           </Grid2>
-        </Container>
+        </Box>
       </Box>
 
       {/* FAQ Section */}
       <Box sx={{ py: 8, backgroundColor: "#f9f9f9" }}>
-        <Container
-          maxWidth="lg"
+        <Box
           sx={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "space-between",
+            justifyContent: "center",
           }}
         >
           <Grid2 container>
@@ -364,7 +363,7 @@ const HomePage: React.FC = () => {
               </List>
             </Grid2>
           </Grid2>
-        </Container>
+        </Box>
       </Box>
       {/* Footer */}
       <Footer />

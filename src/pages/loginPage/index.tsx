@@ -1,78 +1,79 @@
 import { LoginComponent } from "@/PageComponents/components/LoginForm";
 import PublicHeader from "@/PageComponents/components/PublicHeader";
-import { Box, Container, Paper, Typography, Divider } from "@mui/material";
+import { Box, Typography, Divider, Grid2 } from "@mui/material";
+import Image from "next/image";
 import React from "react";
 
 const LoginPage = () => {
   return (
     <Box>
       <PublicHeader />
-      <Box
-        sx={{
-          background: "linear-gradient(to right, #00004f,#000 )",
-          minHeight: "100vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: 2,
-          animation: "fadeIn 1s ease-in-out",
-          "@keyframes fadeIn": {
-            "0%": { opacity: 0, transform: "translateY(10px)" },
-            "100%": { opacity: 1, transform: "translateY(0)" },
-          },
-        }}
+
+      <Grid2
+        container
+        sx={{ height: "100vh", display: "flex", alignItems: "end " }}
       >
-        <Container
-          maxWidth="sm"
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Paper
-            elevation={10}
+        <Grid2 size={{ xs: 12, sm: 6 }} sx={{ mt: { xs: 8, sm: 0 } }}>
+          <Image
+            src={"/assets/loginbanner.png"}
+            alt={""}
+            height={500}
+            width={500}
+            style={{ width: "100%", height: "auto" }}
+          />
+        </Grid2>
+        <Grid2 size={{ xs: 12, sm: 6 }}>
+          <Box
             sx={{
-              padding: { xs: 2, sm: 4 },
-              borderRadius: 3,
-              background: "#ffffff",
-              boxShadow: "0 8px 24px rgba(0, 0, 0, 0.2)",
-              width: "100%",
+              minHeight: "100vh",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: 2,
             }}
           >
-            <Typography
-              variant="h4"
-              textAlign="center"
-              gutterBottom
+            <Box
+              maxWidth="sm"
               sx={{
-                fontWeight: "bold",
-                color: "#00004f",
-                marginBottom: 2,
+                display: "grid",
+                justifyContent: "center",
+                alignItems: "center",
               }}
             >
-              Welcome Back!
-            </Typography>
-            <Typography
-              variant="subtitle1"
-              textAlign="center"
-              sx={{
-                color: "#555",
-                fontSize: "1rem",
-                marginBottom: 3,
-              }}
-            >
-              Please enter your credentials to access your account.
-            </Typography>
-            <Divider
-              sx={{
-                marginBottom: 3,
-                borderColor: "#ddd",
-              }}
-            />
-            <LoginComponent />
-          </Paper>
-        </Container>
-      </Box>
+              <Typography
+                variant="h4"
+                textAlign="center"
+                gutterBottom
+                sx={{
+                  fontWeight: "bold",
+                  color: "#00004f",
+                  marginBottom: 2,
+                }}
+              >
+                Welcome Back!
+              </Typography>
+              <Typography
+                variant="subtitle1"
+                textAlign="center"
+                sx={{
+                  color: "#555",
+                  fontSize: "1rem",
+                  marginBottom: 3,
+                }}
+              >
+                Please enter your credentials to access your account.
+              </Typography>
+              <Divider
+                sx={{
+                  marginBottom: 3,
+                  borderColor: "#ddd",
+                }}
+              />
+              <LoginComponent />
+            </Box>
+          </Box>
+        </Grid2>
+      </Grid2>
     </Box>
   );
 };

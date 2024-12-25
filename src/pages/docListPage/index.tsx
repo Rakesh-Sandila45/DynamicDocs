@@ -9,19 +9,19 @@ import {
   Radio,
   RadioGroup,
   FormControl,
-  Container,
-  Paper,
   Divider,
   Typography,
+  Grid2,
 } from "@mui/material";
 import { useParams } from "@/customHooks/useParams";
 import { toast } from "react-toastify";
 import { useCustomRouter } from "@/customHooks/useCustomRouter";
 import Header from "@/PageComponents/components/Header";
+import Image from "next/image";
 
 const DocumentsList = () => {
-  //   const [templateType, setTemplateType] = useState("");
   const [formList, setFormList] = useState<any>([]);
+  const [isFetched, setIsFetched] = useState(false);
   const { userID } = useParams();
   const router = useCustomRouter();
   const formik = useFormik({
@@ -44,8 +44,15 @@ const DocumentsList = () => {
       // }
       // const response = await getFormTypesApi(payload);
       const response = ["Offer Letter", "Termination Letter"];
-      setFormList(response);
+      if (response) {
+        setIsFetched(true);
+        setFormList(response);
+      } else {
+        setIsFetched(false);
+        setFormList(["Offer Letter"]);
+      }
     } catch {
+      setIsFetched(false);
       toast.error("Unable to fetch formList");
     }
   };
@@ -55,65 +62,83 @@ const DocumentsList = () => {
   return (
     <Box>
       <Header />
-      <Box
-        sx={{
-          background: "linear-gradient(to right, #00004f,#000 )",
-          minHeight: "100vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: 2,
-          animation: "fadeIn 1s ease-in-out",
-          "@keyframes fadeIn": {
-            "0%": { opacity: 0, transform: "translateY(10px)" },
-            "100%": { opacity: 1, transform: "translateY(0)" },
-          },
-        }}
+      <Grid2
+        container
+        sx={{ height: "100vh", display: "flex", alignItems: "center " }}
       >
-        <Container
-          maxWidth="sm"
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Paper
-            elevation={10}
+        <Grid2 size={{ xs: 12, sm: 6 }} sx={{ mt: { xs: 8, sm: 0 } }}>
+          <Image
+            src={"/assets/documentListBanner.png"}
+            alt={""}
+            height={500}
+            width={500}
+            style={{ width: "100%", height: "auto" }}
+          />
+        </Grid2>
+        <Grid2 size={{ xs: 12, sm: 6 }}>
+          <Box
             sx={{
-              padding: { xs: 2, sm: 4 },
-              borderRadius: 3,
-              background: "#ffffff",
-              boxShadow: "0 8px 24px rgba(0, 0, 0, 0.2)",
-              width: "100%",
+              display: "grid",
+              // justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            <Typography
-              variant="h4"
-              textAlign="center"
-              gutterBottom
-              sx={{
-                fontWeight: "bold",
-                color: "primary.main",
-                marginBottom: 2,
-              }}
-            >
-              Your Documnents list
-            </Typography>
-            <Typography
-              variant="body2"
-              textAlign="center"
-              sx={{
-                fontSize: "1rem",
-                marginBottom: 3,
-              }}
-            >
-              Please select the document to Generate PDF File
-            </Typography>
+            {isFetched ? (
+              <Box>
+                <Typography
+                  variant="h4"
+                  gutterBottom
+                  sx={{
+                    fontWeight: "bold",
+                    color: "primary.main",
+                    marginBottom: 2,
+                  }}
+                >
+                  Your Documnents list
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontSize: "1rem",
+                    marginBottom: 3,
+                  }}
+                >
+                  Please select the document to Generate PDF File
+                </Typography>
+              </Box>
+            ) : (
+              <Box>
+                <Typography
+                  variant="h5"
+                  gutterBottom
+                  sx={{
+                    color: "primary.main",
+                    marginBottom: 2,
+                  }}
+                >
+                  Looks like there are no documents yet
+                  <br />
+                  However you can have a you can continue by choosing demo
+                  document
+                </Typography>
+                <Typography
+                  variant="body2"
+                  textAlign="center"
+                  sx={{
+                    fontSize: "1rem",
+                    marginBottom: 3,
+                  }}
+                >
+                  Please select the document to Generate PDF File
+                </Typography>
+              </Box>
+            )}
             <Divider
+              variant="middle"
               sx={{
                 marginBottom: 3,
                 borderColor: "#ddd",
+                maxWidth: "400px",
               }}
             />
             <form onSubmit={formik.handleSubmit}>
@@ -170,9 +195,9 @@ const DocumentsList = () => {
                 Next
               </Button>
             </form>
-          </Paper>
-        </Container>
-      </Box>
+          </Box>
+        </Grid2>
+      </Grid2>
     </Box>
   );
 };

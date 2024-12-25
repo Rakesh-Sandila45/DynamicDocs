@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-"use client";
 import { firebaseAuth } from "@/pages/_app";
 import { Button, Box, TextField, Grid2 } from "@mui/material";
 import {
@@ -56,9 +55,22 @@ export function LoginComponent() {
           ...values,
         };
         // const response=await getUserIDApi(payload)
-        const response = { userID: "DD-USER000001" };
-        toast.success("Login Successfull");
-        router.push(`/docListPage?userID=${response.userID}`);
+        const response = {
+          userID: "DD-USER000001",
+          userType: "Customer",
+          isExistingUser: true,
+        }; //userType=='Admin'
+        if (response.userType == "Admin") {
+          toast.success("Admin Login Successfull");
+          router.push(`/addDocuments?userID=${response.userID}`);
+        } else if (response.userType == "Customer" && response.isExistingUser) {
+          toast.success("Login Successfull");
+          router.push(`/docListPage?userID=${response.userID}`);
+          // router.push(`/registerForm?userID=${response.userID}`);
+        } else if (response.userType == "Customer" && response.isExistingUser) {
+          toast.info("Please FillOut The Form And Register");
+          router.push(`/registerForm?userID=${response.userID}`);
+        }
       } catch {
         toast.error("unable to fetch user");
       }
