@@ -5,18 +5,21 @@ import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import "react-toastify/dist/ReactToastify.css";
 import { CacheProvider, EmotionCache } from "@emotion/react";
 import createEmotionCache from "../createEmotionCache";
-
+import PropTypes from "prop-types";
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 // import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
 import { getTheme } from "@/utils";
-import { useEffect } from "react";
+import { Component, ReactElement, ReactNode, useEffect } from "react";
 import { setAuthToken } from "@/axios";
 import { ToastContainer } from "react-toastify";
 import { CssBaseline } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import Head from "next/head";
+import { JsonObject } from "@/types/jsonObject";
+import type { NextPage } from "next";
+import { useParams } from "next/navigation";
 const clientSideEmotionCache = createEmotionCache();
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -38,11 +41,24 @@ const firebaseConfig = {
 export const firebaseApp = initializeApp(firebaseConfig);
 export const firebaseAuth = getAuth(firebaseApp);
 
-export default function App({
-  Component,
-  pageProps,
-  emotionCache = clientSideEmotionCache,
-}: AppProps & AppProps & { emotionCache?: EmotionCache | undefined }) {
+export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+  getLayout?: (page: ReactElement, params?: JsonObject) => ReactNode;
+};
+
+export interface MyAppProps extends AppProps {
+  emotionCashe?: EmotionCache;
+}
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
+
+function App(
+  props: AppPropsWithLayout & { emotionCache?: EmotionCache | undefined }
+) {
+  const { Component, emotionCache = clientSideEmotionCache, pageProps } = props,
+    getLayout = Component.getLayout ?? ((page) => page),
+    params = useParams();
   const setAuthenticationState = () => {
     firebaseAuth.currentUser
       ?.getIdToken(true)
@@ -86,9 +102,17 @@ export default function App({
           theme="light"
         />
         <LocalizationProvider dateAdapter={AdapterMoment}>
-          <Component {...pageProps} />
+          {getLayout(<Component {...pageProps} />, params)}
         </LocalizationProvider>
       </ThemeProvider>
     </CacheProvider>
   );
 }
+
+App.propTypes = {
+  Component: PropTypes.elementType.isRequired,
+  emotionCashe: PropTypes.object,
+  pageProps: PropTypes.object.isRequired,
+};
+
+export default App;

@@ -16,6 +16,8 @@ import { Loader } from "@/components/Loader";
 import { useCustomRouter } from "@/customHooks/useCustomRouter";
 import Image from "next/image";
 import PublicHeader from "@/PageComponents/components/PublicHeader";
+import { registerApi } from "@/apiData/api";
+import { useParams } from "@/customHooks/useParams";
 
 interface Values {
   fullName: string;
@@ -24,6 +26,7 @@ interface Values {
 export function RegistrationForm() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useCustomRouter();
+  const { mobile } = useParams();
   const formik = useFormik<Values>({
     initialValues: {
       fullName: "",
@@ -34,18 +37,23 @@ export function RegistrationForm() {
         .required("Please Enter Your Full Name"),
     }),
     onSubmit: async (values) => {
-      // onSignInSubmit(values.otp);
-      //submit api call which gets userId ,payload is otp and mobile Number
+      setIsLoading(true);
       try {
         const payload = {
-          ...values,
+          name: values.fullName,
+          mobile: mobile,
+          userType: "Customer",
         };
-        // const response=await getUserIDApi(payload)
-        const response = { userID: "DD-USER000001" };
-        toast.success("Registration Successfull");
-        router.push(`/docListPage?userID=${response.userID}`);
-      } catch {
-        toast.error("unable to fetch user");
+        const response = await registerApi(payload);
+        if (response.success) {
+          toast.success(response.message);
+          router.push(`/docListPage?mobile=${mobile}`);
+        }
+      } catch (error) {
+        console.log(error);
+        toast.error("unable to register user");
+      } finally {
+        setIsLoading(false);
       }
     },
   });
