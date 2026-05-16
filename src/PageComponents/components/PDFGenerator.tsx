@@ -6,12 +6,9 @@ import { Box, Button } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
 import LocalPrintshopIcon from "@mui/icons-material/LocalPrintshop";
 import { getTemplate } from "@/utils";
-import { useParams } from "@/customHooks/useParams";
-import { getTrackDocumentsApi } from "@/apiData/api";
 
 const PdfCard = (props: any) => {
   const { values, documentType } = props;
-  const { userID } = useParams();
 
   // const trackDownloads = async () => {
   //   const payload = {

@@ -66,7 +66,7 @@ const HomePage: React.FC = () => {
             <Button
               variant="contained"
               size="large"
-              onClick={() => router.push("/addDocuments")}
+              onClick={() => router.push("/loginPage")}
               sx={{ mr: 2, fontSize: { xs: "13px", sm: "18px" } }}
             >
               Get Started

@@ -1,18 +1,38 @@
 import axios from "axios";
-import { getFormTypesUrl, getTrackDownloadsUrl, getUserIDUrl } from "./endpoints";
+import {
+  addDocumentsApiUrl,
+  getDocumentsNameUrl,
+  loginApiUrl,
+  registerApiUrl,
+  removeDocumetApiUrl,
+} from "./endpoints";
 
-
-export async function getUserIDApi(payload:any) {
-  const { data } = await axios.post(getUserIDUrl(),payload);
+export async function loginApi(payload: any) {
+  const { data } = await axios.post(loginApiUrl(), payload);
   return data;
 }
 
-export async function getFromTypesApi(payload:any) {
-  const { data } = await axios.post(getFormTypesUrl(),payload);
+export async function registerApi(payload: any) {
+  const { data } = await axios.post(registerApiUrl(), payload);
   return data;
 }
 
-export async function getTrackDocumentsApi(payload:any) {
-  const { data } = await axios.get(getTrackDownloadsUrl(),payload);
+export async function getDocumentsNameApi(mobile: any) {
+  const { data } = await axios.get(getDocumentsNameUrl(mobile));
+  return data;
+}
+
+export async function addDocumentsApi(payload: any) {
+  const { data } = await axios.post(addDocumentsApiUrl(), payload);
+  return data;
+}
+export async function removeDocumentApi(
+  mobile: string,
+  docName: string,
+  adminMobile: any
+) {
+  const { data } = await axios.post(
+    removeDocumetApiUrl(mobile, docName, adminMobile)
+  );
   return data;
 }

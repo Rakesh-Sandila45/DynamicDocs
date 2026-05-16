@@ -39,8 +39,11 @@ export const efundzzCtcBreakUp = (yearlyCTC: number) => {
 export const getForm = (documentType: string) => {
   // different documentType could have same inputForms
   switch (documentType) {
-    case "Offer Letter":
+    case "SampleOfferLetter":
       return <OfferLetterForm />;
+    case "SampleTerminationLetter":
+      return <OfferLetterForm />;
+
     default:
       return <OfferLetterForm />;
   }
@@ -48,8 +51,11 @@ export const getForm = (documentType: string) => {
 
 export const getTemplate = (documentType: string, values: any) => {
   switch (documentType) {
-    case "Offer Letter":
+    case "SampleOfferLetter":
       return <OfferLetter values={values} />;
+    case "SampleTerminationLetter":
+      return <OfferLetter values={values} />;
+
     default:
       return <OfferLetter />;
   }

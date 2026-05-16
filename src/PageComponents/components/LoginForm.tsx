@@ -16,6 +16,7 @@ import { Loader } from "@/components/Loader";
 import { useCustomRouter } from "@/customHooks/useCustomRouter";
 import axios from "axios";
 import { setAuthToken } from "@/axios";
+import { loginApi } from "@/apiData/api";
 
 declare global {
   interface Window {
@@ -49,35 +50,39 @@ export function LoginComponent() {
     }),
     onSubmit: async (values) => {
       // onSignInSubmit(values.otp);
-      //submit api call which gets userId ,payload is otp and mobile Number
+      setIsLoading(true);
       try {
         const payload = {
-          ...values,
+          mobile: values.mobile,
         };
-        // const response=await getUserIDApi(payload)
-        const response = {
-          userID: "DD-USER000001",
-          userType: "Customer",
-          isExistingUser: true,
-        }; //userType=='Admin'
+        const response = await loginApi(payload);
+        // const response = {
+        //   userType: "Customer",
+        //   isExistingUser: true,
+        // }; //userType=='Admin'
         if (response.userType == "Admin") {
           toast.success("Admin Login Successfull");
-          router.push(`/addDocuments?userID=${response.userID}`);
+          router.push(
+            `/addDocuments?adminMobile=${values.mobile}&userType=${response.userType}`
+          );
         } else if (response.userType == "Customer" && response.isExistingUser) {
           toast.success("Login Successfull");
-          router.push(`/docListPage?userID=${response.userID}`);
-          // router.push(`/registerForm?userID=${response.userID}`);
-        } else if (response.userType == "Customer" && response.isExistingUser) {
-          toast.info("Please FillOut The Form And Register");
-          router.push(`/registerForm?userID=${response.userID}`);
+          router.push(
+            `/docListPage?mobile=${values.mobile}&&userType=${response.userType}`
+          );
+        } else if (!response.isExistingUser) {
+          router.push(`/registerForm?mobile=${values.mobile}`);
         }
       } catch {
         toast.error("unable to fetch user");
+      } finally {
+        setIsLoading(false);
       }
     },
   });
 
   const sendOTP = (m: string) => {
+    setIsLoading(true);
     const appVerifier = window.recaptchaVerifier;
     // if (!appVerifier) {
     //   toast.error("Recaptcha is not initialized.");
@@ -90,6 +95,9 @@ export function LoginComponent() {
       })
       .catch((error) => {
         toast.error(`Failed to send OTP: ${error.message}`);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
@@ -108,6 +116,7 @@ export function LoginComponent() {
     if (event.target.value.length === 6) {
       if (window.confirmationResult) {
         // event.target.value.length === 6;
+        setIsLoading(true);
         window.confirmationResult
           .confirm(event.target.value)
           .then((result: any) => {
@@ -117,6 +126,9 @@ export function LoginComponent() {
           })
           .catch((error: any) => {
             toast.error("Invalid OTP!");
+          })
+          .finally(() => {
+            setIsLoading(false);
           });
       } else {
         toast.error("Confirmation result is not set.");

@@ -7,6 +7,7 @@ import {
   Container,
   Grid2,
   Typography,
+  IconButton,
 } from "@mui/material";
 import { useFormik } from "formik";
 import React, { ReactElement, useEffect, useState } from "react";
@@ -17,19 +18,25 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import PageLayout from "@/layout/PageLayout";
 import Header from "@/PageComponents/components/Header";
 import Image from "next/image";
-
+import {
+  addDocumentsApi,
+  getDocumentsNameApi,
+  removeDocumentApi,
+} from "@/apiData/api";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { useParams } from "@/customHooks/useParams";
+import { NextPageWithLayout } from "../_app";
 interface Values {
   mobile: string;
-  documentName: string;
 }
 
-function AddDocuments() {
+const AddDocuments: NextPageWithLayout = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [documents, setDocuments] = useState<string[]>([]); // Array to hold document names
-
+  const [documents, setDocuments] = useState<string[]>([""]);
+  const [existingDocsList, setExistingDocsList] = useState<any>([]);
+  const { adminMobile } = useParams();
   const formik = useFormik<Values>({
     initialValues: {
-      documentName: "",
       mobile: "",
     },
     validationSchema: Yup.object().shape({
@@ -37,22 +44,30 @@ function AddDocuments() {
         .min(10, "Mobile Number should contain 10 digits")
         .max(10, "Mobile Number must be 10 digits")
         .required("Please Enter Mobile Number"),
-      documentName: Yup.string()
-        .min(3, "Please Enter Valid Name")
-        .required("Please Enter Your Full Name"),
     }),
     onSubmit: async (values) => {
       const payload = {
+        adminMobile: adminMobile,
         ...values,
         documents,
       };
-      console.log("Submitted values:", payload);
-      //API to add documents to user
+      setIsLoading(true);
+      try {
+        const response = await addDocumentsApi(payload);
+        if (response.status === 200) {
+          setExistingDocsList(response.documents);
+          toast.success("Documents Added Successfully");
+        }
+      } catch {
+        toast.error("Unable to add documents");
+      } finally {
+        setIsLoading(false);
+      }
     },
   });
 
   const handleAddDocumentsField = () => {
-    setDocuments([...documents, ""]); // Add an empty document field
+    setDocuments([...documents, ""]);
   };
 
   const handleDocumentChange = (index: number, value: string) => {
@@ -66,6 +81,42 @@ function AddDocuments() {
     setDocuments(updatedDocuments);
   };
 
+  const onMobileChange = async (e: any) => {
+    formik.handleChange(e);
+    setExistingDocsList([]);
+    const mobile = e.target.value;
+    if (mobile.length == 10) {
+      setIsLoading(true);
+      try {
+        const response = await getDocumentsNameApi(mobile);
+        if (response.documents) {
+          setExistingDocsList(response.documents);
+          console.log(response.documents);
+        }
+      } catch {
+        toast.error("Unable to fetch existing formList");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  const handleRemoveDocument = async (doc: string) => {
+    setIsLoading(true);
+    try {
+      const response = await removeDocumentApi(
+        formik.values.mobile,
+        doc,
+        adminMobile
+      );
+      setExistingDocsList(response.documents);
+      toast.success(`Successfully Deleted ${doc}`);
+    } catch {
+      toast.error(`Unable to delete Document ${doc}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   useEffect(() => {
     formik.validateForm();
   }, []);
@@ -76,7 +127,7 @@ function AddDocuments() {
 
   return (
     <Box>
-      <Header />
+      {/* <Header /> */}
       <Grid2
         container
         sx={{ height: "100vh", display: "flex", alignItems: "center " }}
@@ -111,6 +162,16 @@ function AddDocuments() {
                       marginBottom: 2,
                     }}
                   >
+                    Hey Admin..
+                  </Typography>
+                  <Typography
+                    variant="h4"
+                    sx={{
+                      fontWeight: "bold",
+                      color: "primary.main",
+                      marginBottom: 2,
+                    }}
+                  >
                     Add Documents For The User
                   </Typography>
                 </Grid2>
@@ -123,7 +184,7 @@ function AddDocuments() {
                     name="mobile"
                     fullWidth
                     value={formik.values.mobile}
-                    onChange={formik.handleChange}
+                    onChange={onMobileChange}
                     onBlur={formik.handleBlur}
                     error={!!formik.errors.mobile && formik.touched.mobile}
                     helperText={
@@ -140,31 +201,45 @@ function AddDocuments() {
                     }}
                   />
                 </Grid2>
-                <Grid2 size={{ xs: 12 }}>
-                  <TextField
-                    id="documentName"
-                    name="documentName"
-                    label="Main Document Name"
-                    placeholder="Main Document Name"
-                    fullWidth
-                    value={formik.values.documentName}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    error={
-                      !!formik.errors.documentName &&
-                      formik.touched.documentName
-                    }
-                    helperText={
-                      formik.touched.documentName
-                        ? formik.errors.documentName
-                        : ""
-                    }
-                  />
+                <Grid2
+                  size={{ xs: 12 }}
+                  sx={{ display: "flex", flexFlow: "wrap" }}
+                >
+                  {existingDocsList.map((doc: any, index: any) => (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        boxShadow: 2,
+                        mr: 1,
+                        borderRadius: "5px",
+                        p: 0.5,
+                        minWidth: "150px",
+                        justifyContent: "space-between",
+                      }}
+                      key={index}
+                    >
+                      <Typography
+                        sx={{
+                          border: "1px solid",
+                          borderRadius: "5px",
+                          p: 0.5,
+                          fontSize: "8px",
+                          flexWrap: "nowrap",
+                        }}
+                      >
+                        {doc}
+                      </Typography>
+                      <IconButton onClick={() => handleRemoveDocument(doc)}>
+                        <DeleteIcon sx={{ fontSize: "15px" }} />
+                      </IconButton>
+                    </Box>
+                  ))}
                 </Grid2>
                 {documents.map((doc, index) => (
                   <Grid2 size={{ xs: 12 }} key={index}>
                     <TextField
-                      label={`Additional Document ${index + 1}`}
+                      label={`Document ${index + 1}`}
                       placeholder={`Document ${index + 1}`}
                       fullWidth
                       value={doc}
@@ -172,15 +247,17 @@ function AddDocuments() {
                         handleDocumentChange(index, e.target.value)
                       }
                     />
-                    <Button
-                      variant="outlined"
-                      color="error"
-                      size="small"
-                      onClick={() => handleRemoveDocumentField(index)}
-                      sx={{ mt: 1 }}
-                    >
-                      Remove
-                    </Button>
+                    {index > 0 && (
+                      <Button
+                        variant="outlined"
+                        color="error"
+                        size="small"
+                        onClick={() => handleRemoveDocumentField(index)}
+                        sx={{ mt: 1 }}
+                      >
+                        Remove
+                      </Button>
+                    )}
                   </Grid2>
                 ))}
                 <Grid2 size={{ xs: 12 }}>
@@ -223,9 +300,9 @@ function AddDocuments() {
       </Grid2>
     </Box>
   );
-}
-// AddDocuments.getLayout = function getLayout(page: ReactElement) {
-//   return <PageLayout>{page}</PageLayout>;
-// };
+};
+AddDocuments.getLayout = function getLayout(page: ReactElement) {
+  return <PageLayout>{page}</PageLayout>;
+};
 
 export default AddDocuments;

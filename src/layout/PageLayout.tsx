@@ -6,7 +6,7 @@ type Props = {
   children: ReactNode;
 };
 
-function PageLayout(props: Props) {
+export default function PageLayout(props: Props) {
   const { children } = props;
   return (
     <Box
@@ -36,5 +36,3 @@ function PageLayout(props: Props) {
     </Box>
   );
 }
-
-export default PageLayout;

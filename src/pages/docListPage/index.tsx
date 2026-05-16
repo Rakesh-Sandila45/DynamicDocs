@@ -13,16 +13,19 @@ import {
   Typography,
   Grid2,
 } from "@mui/material";
-import { useParams } from "@/customHooks/useParams";
 import { toast } from "react-toastify";
 import { useCustomRouter } from "@/customHooks/useCustomRouter";
 import Header from "@/PageComponents/components/Header";
 import Image from "next/image";
+import { getDocumentsNameApi } from "@/apiData/api";
+import { useParams } from "@/customHooks/useParams";
+import { Loader } from "@/components/Loader";
 
 const DocumentsList = () => {
-  const [formList, setFormList] = useState<any>([]);
+  const [documentList, setDocumentList] = useState<any>([]);
   const [isFetched, setIsFetched] = useState(false);
-  const { userID } = useParams();
+  const [isLoading, setIsLoading] = useState(false);
+  const { mobile } = useParams();
   const router = useCustomRouter();
   const formik = useFormik({
     initialValues: {
@@ -32,33 +35,35 @@ const DocumentsList = () => {
       documentType: Yup.string().required("Required"),
     }),
     onSubmit: (values) => {
+      const formattedDocumentType = values.documentType.replace(/\s+/g, "");
       router.push(
-        `/inputFormPage?userID=${userID}&documentType=${values.documentType}`
+        `/inputFormPage?mobile=${mobile}&documentType=${formattedDocumentType}`
       );
     },
   });
-  const getTotalFormTypes = async (userID: any) => {
+  const getTotalFormTypes = async () => {
+    setIsLoading(true);
     try {
-      // const payload={
-      //   userID:userID
-      // }
-      // const response = await getFormTypesApi(payload);
-      const response = ["Offer Letter", "Termination Letter"];
-      if (response) {
+      const response = await getDocumentsNameApi(mobile);
+      if (response.documents) {
         setIsFetched(true);
-        setFormList(response);
-      } else {
-        setIsFetched(false);
-        setFormList(["Offer Letter"]);
+        setDocumentList(response.documents);
       }
     } catch {
       setIsFetched(false);
-      toast.error("Unable to fetch formList");
+      toast.error("Unable to fetch Document List");
+    } finally {
+      setIsLoading(false);
     }
   };
   useEffect(() => {
-    getTotalFormTypes(userID);
-  }, [userID]);
+    if (mobile) getTotalFormTypes();
+  }, [mobile]);
+
+  if (isLoading) {
+    return <Loader />;
+  }
+
   return (
     <Box>
       <Header />
@@ -165,7 +170,7 @@ const DocumentsList = () => {
                   value={formik.values.documentType}
                   onChange={formik.handleChange}
                 >
-                  {formList.map((item: string, index: any) => (
+                  {documentList.map((item: string, index: any) => (
                     <FormControlLabel
                       key={index}
                       value={item}

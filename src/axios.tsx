@@ -8,7 +8,7 @@ export const setAuthToken = (token: string) => {
 
 const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
-  timeout: 10000, // 10 seconds timeout
+  // timeout: 100000, // 100 seconds timeout
 });
 
 instance.interceptors.request.use((config) => {
@@ -16,7 +16,7 @@ instance.interceptors.request.use((config) => {
     const token = getAuthToken();
     if (token) config.headers.Authorization = `Bearer ${token}`;
   }
-  config.headers["X-Brand"] = "DD"; // Custom header for branding
+  config.headers["X-Brand"] = "DD";
   return config;
 });
 
@@ -37,9 +37,9 @@ instance.interceptors.response.use(
     }
     const { status, data } = error.response;
 
-    if (status === 401 || status === 403) {
-      setAuthToken(""); // Clear token for unauthorized access
-    }
+    // if (status === 401 || status === 403) {
+    //   setAuthToken(""); // Clear token for unauthorized access
+    // }
     if (status === 400 && !data.error) return Promise.reject(data);
     if ([422, 404].includes(status)) return Promise.reject(data);
 
