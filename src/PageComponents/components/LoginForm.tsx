@@ -3,6 +3,7 @@
 import { firebaseAuth } from "@/pages/_app";
 import { Button, Box, TextField, Grid2 } from "@mui/material";
 import {
+  ConfirmationResult,
   getAuth,
   RecaptchaVerifier,
   signInWithPhoneNumber,
@@ -14,14 +15,13 @@ import { toast } from "react-toastify";
 import * as Yup from "yup";
 import { Loader } from "@/components/Loader";
 import { useCustomRouter } from "@/customHooks/useCustomRouter";
-import axios from "axios";
 import { setAuthToken } from "@/axios";
 import { loginApi } from "@/apiData/api";
 
 declare global {
   interface Window {
-    recaptchaVerifier: any;
-    confirmationResult: any;
+    recaptchaVerifier?: RecaptchaVerifier;
+    confirmationResult?: ConfirmationResult;
   }
 }
 
@@ -84,10 +84,11 @@ export function LoginComponent() {
   const sendOTP = (m: string) => {
     setIsLoading(true);
     const appVerifier = window.recaptchaVerifier;
-    // if (!appVerifier) {
-    //   toast.error("Recaptcha is not initialized.");
-    //   return;
-    // }
+    if (!appVerifier) {
+      toast.error("Recaptcha is not initialized.");
+      setIsLoading(false);
+      return;
+    }
     signInWithPhoneNumber(firebaseAuth, `+91${m}`, appVerifier)
       .then((confirmationResult) => {
         window.confirmationResult = confirmationResult;
@@ -135,33 +136,17 @@ export function LoginComponent() {
       }
     }
   };
-  // const setRecaptch = () => {
-  //   if (!window.recaptchaVerifier) {
-  //     window.recaptchaVerifier = new RecaptchaVerifier(
-  //       firebaseAuth,
-  //       "recaptcha", // DOM element ID.
-  //       {
-  //         size: "invisible", // 'invisible' for auto-validation.
-  //         callback: (response:any) => {
-  //           console.log("Recaptcha verified:", response);
-  //         },
-  //         "expired-callback": () => {
-  //           console.warn("Recaptcha expired. Resetting verifier.");
-  //         },
-  //       },
-
-  //     );
-  //   }
-  // };
   const setRecaptch = () => {
-    window.recaptchaVerifier = new RecaptchaVerifier(
-      firebaseAuth,
-      "recaptcha",
-      {
-        size: "invisible",
-        callback: () => {},
-      }
-    );
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        firebaseAuth,
+        "recaptcha-container",
+        {
+          size: "invisible",
+          callback: () => {},
+        }
+      );
+    }
   };
   useEffect(() => {
     setRecaptch();
@@ -184,11 +169,10 @@ export function LoginComponent() {
       });
   }, []);
 
-  if (isLoading) {
-    return <Loader />;
-  }
   return (
     <form onSubmit={formik.handleSubmit}>
+      <div id="recaptcha-container" />
+      {isLoading && <Loader />}
       <Grid2 container spacing={3}>
         <Grid2 size={{ xs: 12 }}>
           <TextField
@@ -253,14 +237,6 @@ export function LoginComponent() {
               }}
             >
               Login
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              id="recaptcha"
-              sx={{ display: "none" }}
-            >
-              Dummy
             </Button>
           </Box>
         </Grid2>
