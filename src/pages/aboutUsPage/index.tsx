@@ -44,6 +44,7 @@ const AboutUs = () => {
                 height={500}
                 width={500}
                 style={{ width: "100%", borderRadius: "8px", height: "auto" }}
+                priority
               />
             </Grid2>
           </Grid2>
@@ -65,6 +66,7 @@ const AboutUs = () => {
                 height={500}
                 width={500}
                 style={{ width: "100%", borderRadius: "8px", height: "auto" }}
+                priority
               />
             </Grid2>
             <Grid2 size={{ xs: 12, sm: 6 }}>

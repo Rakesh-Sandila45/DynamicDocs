@@ -30,19 +30,19 @@ const Template = () => {
     initialValues: {
       documentName: "Rakesh Sandila Offer Letter",
       name: "Rakesh Sandila",
-      // offerGeneratedDate: "14-11-2024",
+      offerGeneratedDate: "13-9-2026",
       jobLocation: "Hyderabad",
       designation: "Associate Software Engineer",
       ctc: "500000",
-      // offerOpenUntill: "13-11-2024",
-      // reportingDate: "13-11-2024",
+      offerOpenUntill: "13-9-2026",
+      reportingDate: "13-9-2026",
       // name: "",
-      offerGeneratedDate: "",
+      // offerGeneratedDate: "",
       // jobLocation: "",
       // designation: "",
       // ctc: "",
-      offerOpenUntill: "",
-      reportingDate: "",
+      // offerOpenUntill: "",
+      // reportingDate: "",
     },
 
     validationSchema: yup.object({
@@ -144,7 +144,7 @@ const Template = () => {
                 onChange={(date) => {
                   formik.setFieldValue(
                     "offerGeneratedDate",
-                    date?.format("DD-MM-YYYY")
+                    date?.format("DD-MM-YYYY"),
                   );
                 }}
                 slotProps={{
@@ -223,7 +223,7 @@ const Template = () => {
                 onChange={(date) => {
                   formik.setFieldValue(
                     "offerOpenUntill",
-                    date?.format("DD-MM-YYYY")
+                    date?.format("DD-MM-YYYY"),
                   );
                 }}
                 slotProps={{
@@ -251,7 +251,7 @@ const Template = () => {
                 onChange={(date) => {
                   formik.setFieldValue(
                     "reportingDate",
-                    date?.format("DD-MM-YYYY")
+                    date?.format("DD-MM-YYYY"),
                   );
                 }}
                 slotProps={{

@@ -54,7 +54,7 @@ type AppPropsWithLayout = AppProps & {
 };
 
 function App(
-  props: AppPropsWithLayout & { emotionCache?: EmotionCache | undefined }
+  props: AppPropsWithLayout & { emotionCache?: EmotionCache | undefined },
 ) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props,
     getLayout = Component.getLayout ?? ((page) => page),

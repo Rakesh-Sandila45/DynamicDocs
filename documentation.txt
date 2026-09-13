@@ -1,0 +1,678 @@
+Dynamic Docs Project Documentation
+Generated on: 2026-06-24
+
+Project Overview
+Dynamic Docs is a Next.js application for role-based document generation.
+Users authenticate with Firebase phone OTP. After OTP verification, the backend
+decides whether the mobile number belongs to an Admin, an existing Customer, or
+a new Customer.
+
+Admins assign document names to customer mobile numbers. Customers view the
+documents assigned to their mobile number, select a document type, fill a form,
+and generate a PDF for download or preview.
+
+
+Technology Stack
+- Framework: Next.js 15 using Pages Router
+- Language: TypeScript and React
+- UI: Material UI, Emotion, global CSS
+- Forms: Formik
+- Validation: Yup
+- Authentication: Firebase phone OTP with invisible reCAPTCHA
+- PDF generation: @react-pdf/renderer
+- HTTP client: Axios
+- Notifications: react-toastify
+- Testing: Jest, next/jest, jsdom, React Testing Library
+
+
+Main Architecture
+The project source code lives inside the src folder.
+
+Important folders:
+- src/pages
+  Next.js route pages.
+
+- src/PageComponents/components
+  Reusable screen-level components such as LoginForm, Header, PublicHeader,
+  OfferLetterForm, and PDFGenerator.
+
+- src/DocumentComponents
+  PDF templates. Currently includes OfferLetter.
+
+- src/apiData
+  API endpoint builders and backend API wrapper functions.
+
+- src/customHooks
+  Router and query parameter helpers.
+
+- src/layout
+  Shared layout wrappers.
+
+- src/components
+  Shared small components such as Loader.
+
+- src/themes
+  Material UI theme configuration.
+
+- src/styles
+  Global styles.
+
+- public
+  Static assets such as logo, banners, icons, and favicon.
+
+
+Application Bootstrap
+File: src/pages/_app.tsx
+
+Responsibilities:
+- Loads global CSS.
+- Creates the Emotion cache.
+- Initializes Firebase using NEXT_PUBLIC_FIREBASE_* environment variables.
+- Exports firebaseApp and firebaseAuth.
+- Watches Firebase authentication state.
+- Gets the Firebase ID token when a user is authenticated.
+- Stores the token using setAuthToken().
+- Clears the token when the user is signed out.
+- Wraps the app with ThemeProvider, CssBaseline, ToastContainer, and
+  LocalizationProvider.
+- Supports page-level layouts using Component.getLayout.
+
+
+Environment Variables
+The app expects these environment variables:
+
+- NEXT_PUBLIC_API_URL
+  Backend API base URL.
+
+- NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY
+  Firebase public API key.
+
+- NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+  Firebase auth domain.
+
+- NEXT_PUBLIC_FIREBASE_PROJECT_ID
+  Firebase project id.
+
+- NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET_ID
+  Firebase storage bucket id.
+
+- NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+  Firebase messaging sender id.
+
+- NEXT_PUBLIC_FIREBASE_APP_ID
+  Firebase app id.
+
+- NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
+  Firebase measurement id.
+
+
+Routes
+/ 
+Public home page.
+
+/aboutUsPage
+Public about page.
+
+/loginPage
+Login page. Renders PublicHeader, login banner, welcome text, and LoginComponent.
+
+/registerForm?mobile=:mobile
+Registration page for new customers.
+
+/addDocuments?adminMobile=:adminMobile&userType=Admin
+Admin page for assigning and removing customer documents.
+
+/docListPage?mobile=:mobile&userType=Customer
+Customer page for viewing assigned documents and selecting a document type.
+
+/inputFormPage?mobile=:mobile&documentType=:documentType
+Dynamic form page for filling document details and generating PDF output.
+
+
+Firebase OTP Authentication Flow
+Main file: src/PageComponents/components/LoginForm.tsx
+
+Flow:
+1. User opens /loginPage.
+2. LoginComponent mounts.
+3. The component creates an invisible Firebase RecaptchaVerifier.
+4. User enters a 10-digit mobile number.
+5. When the mobile number reaches 10 digits, sendOTP() runs.
+6. sendOTP() calls:
+   signInWithPhoneNumber(firebaseAuth, "+91" + mobile, appVerifier)
+7. Firebase sends OTP to the mobile number.
+8. The Firebase ConfirmationResult is stored on window.confirmationResult.
+9. User enters a 6-digit OTP.
+10. LoginComponent calls:
+    window.confirmationResult.confirm(otp)
+11. If OTP confirmation succeeds, mobileVerified becomes true.
+12. The Login button becomes enabled.
+13. User submits the login form.
+
+Error cases:
+- If reCAPTCHA is not initialized, the app shows:
+  "Recaptcha is not initialized."
+- If OTP send fails, the app shows:
+  "Failed to send OTP: <error message>"
+- If OTP confirmation fails, the app shows:
+  "Invalid OTP!"
+
+
+Role-Based Login Flow
+After OTP verification, LoginComponent calls:
+loginApi({ mobile })
+
+The backend response controls navigation.
+
+Admin:
+- If response.userType is "Admin":
+  User is routed to:
+  /addDocuments?adminMobile=<mobile>&userType=Admin
+
+Existing Customer:
+- If response.userType is "Customer" and response.isExistingUser is true:
+  User is routed to:
+  /docListPage?mobile=<mobile>&userType=Customer
+
+New Customer:
+- If response.isExistingUser is false:
+  User is routed to:
+  /registerForm?mobile=<mobile>
+
+Important note:
+The frontend routes users based on role, but backend APIs should still enforce
+authorization. The frontend should not be treated as the only security layer.
+
+
+Auth Token Handling
+File: src/axios.tsx
+
+Token storage:
+- Firebase ID token is stored in localStorage under:
+  auth-token
+
+setAuthToken(token):
+- Stores the token in localStorage.
+
+Axios interceptor:
+- Reads auth-token from localStorage.
+- Adds Authorization header:
+  Bearer <token>
+- Adds X-Brand header:
+  DD
+
+Sign out:
+- Header and PublicHeader call Firebase signOut().
+- After sign out, auth-token is cleared.
+- User is routed back to /.
+
+Important implementation note:
+src/apiData/api.tsx currently imports axios directly from the axios package.
+Because of that, the configured Axios instance from src/axios.tsx may not be
+used by those API calls. If auth headers are required for all backend calls,
+api.tsx should import the configured instance from src/axios.tsx.
+
+
+Admin Document Assignment Flow
+Main file: src/pages/addDocuments/index.tsx
+
+Purpose:
+Admin assigns document names to a customer mobile number.
+
+Query parameter:
+- adminMobile
+  Read from the URL using useParams().
+
+Flow:
+1. Admin logs in through Firebase OTP.
+2. Backend returns userType "Admin".
+3. App routes Admin to /addDocuments.
+4. Admin enters a customer mobile number.
+5. When the customer mobile number reaches 10 digits, the app calls:
+   getDocumentsNameApi(mobile)
+6. Existing documents assigned to that customer are displayed.
+7. Admin can add document input fields by clicking Add Document.
+8. Admin enters one or more document names.
+9. Admin submits the form.
+10. The app sends this payload to addDocumentsApi():
+    {
+      adminMobile,
+      mobile,
+      documents
+    }
+11. If the backend returns status 200:
+    - existingDocsList is updated with response.documents
+    - success toast is shown
+
+Removing documents:
+1. Admin clicks delete on an existing document.
+2. The app calls:
+   removeDocumentApi(mobile, docName, adminMobile)
+3. Backend removes the assigned document.
+4. UI updates existingDocsList from response.documents.
+
+Validation:
+- Customer mobile number is required.
+- Mobile number must be exactly 10 digits.
+
+
+Customer Document List Flow
+Main file: src/pages/docListPage/index.tsx
+
+Purpose:
+Customer views assigned documents and selects one to generate.
+
+Query parameter:
+- mobile
+  Customer mobile number.
+
+Flow:
+1. Customer logs in through Firebase OTP.
+2. Backend confirms existing Customer.
+3. App routes Customer to /docListPage.
+4. docListPage reads mobile from URL query parameters.
+5. App calls:
+   getDocumentsNameApi(mobile)
+6. Backend returns assigned document names.
+7. Documents are displayed as radio options.
+8. Customer selects a document type.
+9. On submit, whitespace is removed from selected document name.
+10. App routes to:
+    /inputFormPage?mobile=<mobile>&documentType=<documentType>
+
+Example:
+If selected document name is "Sample Offer Letter", it becomes:
+SampleOfferLetter
+
+
+New Customer Registration Flow
+Main file: src/pages/registerForm/index.tsx
+
+Purpose:
+Register new customers after OTP verification.
+
+Query parameter:
+- mobile
+  Mobile number from login flow.
+
+Flow:
+1. New user completes Firebase OTP verification.
+2. Login API says user does not exist.
+3. App routes to /registerForm?mobile=<mobile>.
+4. User enters full name.
+5. App calls registerApi() with:
+   {
+     name: fullName,
+     mobile,
+     userType: "Customer"
+   }
+6. If registration succeeds:
+   - success toast is shown
+   - user is routed to /docListPage?mobile=<mobile>
+
+Validation:
+- Full name is required.
+- Full name must be at least 3 characters.
+
+
+Document Generation Flow
+Main file: src/pages/inputFormPage/index.tsx
+
+Purpose:
+Load the correct form for the selected document type.
+
+Flow:
+1. Customer selects document type on /docListPage.
+2. App routes to /inputFormPage with documentType query parameter.
+3. inputFormPage reads documentType using useParams().
+4. inputFormPage calls:
+   getForm(documentType)
+5. getForm returns the correct form component.
+
+Current form mapping:
+File: src/utils.tsx
+
+- SampleOfferLetter -> OfferLetterForm
+- SampleTerminationLetter -> OfferLetterForm
+- default -> OfferLetterForm
+
+
+Offer Letter Form Flow
+Main file: src/PageComponents/components/OfferLetterForm.tsx
+
+Fields:
+- documentName
+- name
+- offerGeneratedDate
+- jobLocation
+- designation
+- ctc
+- offerOpenUntill
+- reportingDate
+
+Validation:
+- documentName is required.
+- name is required.
+- offerGeneratedDate is required.
+- jobLocation is required.
+- designation is required.
+- ctc is required and numeric.
+- offerOpenUntill is required.
+- reportingDate is required.
+
+Submit behavior:
+1. User fills the form.
+2. User clicks Submit.
+3. Form values are saved in component state.
+4. A dialog opens.
+5. Dialog shows document name.
+6. Dialog renders PDF actions through PdfCard.
+
+
+PDF Generation Flow
+Main file: src/PageComponents/components/PDFGenerator.tsx
+
+Download:
+- Uses PDFDownloadLink from @react-pdf/renderer.
+- Calls getTemplate(documentType, values).
+- Uses values.documentName as the downloaded file name.
+
+Preview:
+- Uses BlobProvider from @react-pdf/renderer.
+- Creates a PDF blob URL.
+- Opens the PDF preview in a new browser tab.
+
+Current template mapping:
+File: src/utils.tsx
+
+- SampleOfferLetter -> OfferLetter
+- SampleTerminationLetter -> OfferLetter
+- default -> OfferLetter
+
+Important note:
+Download uses getTemplate(documentType, values), but preview currently renders
+OfferLetter directly. If more templates are added, preview should also use
+getTemplate(documentType, values).
+
+
+Offer Letter Template
+Main file: src/DocumentComponents/OfferLetter.tsx
+
+Purpose:
+Renders a PDF offer letter using @react-pdf/renderer.
+
+PDF pages:
+1. Offer letter content:
+   - Generated date
+   - Candidate name
+   - Job location
+   - Designation
+   - CTC
+   - Offer open-until date
+   - Reporting date
+   - Signature section
+   - Footer
+
+2. Annexure page:
+   - CTC break-up
+   - Monthly and annual salary components
+   - Deductions
+   - Take-home calculation
+   - Documents checklist
+
+Salary calculation helper:
+File: src/utils.tsx
+Function: efundzzCtcBreakUp(yearlyCTC)
+
+It calculates:
+- yearlyBasicSalary
+- yearlyHRA
+- yearlyMedicalAllowance
+- transportAllowanceYearly
+- yearlyCompanyContributionToEPF
+- yearlyPFDeduction
+- professionalTaxYearly
+- totalDeductionsYearly
+- monthlyBasicSalary
+- monthlyHRA
+- monthlyMedicalAllowance
+- transportAllowanceMonthly
+- monthlyCompanyContributionToEPF
+- monthlyPFDeduction
+- professionalTaxMonthly
+- totalDeductionsMonthly
+
+
+API Layer
+Endpoint file:
+src/apiData/endpoints.tsx
+
+API wrapper file:
+src/apiData/api.tsx
+
+Base URL:
+process.env.NEXT_PUBLIC_API_URL
+
+APIs:
+
+loginApi(payload)
+- Method: POST
+- URL: /login
+- Payload:
+  { mobile }
+- Used by LoginForm after OTP verification.
+- Expected to return userType and isExistingUser.
+
+registerApi(payload)
+- Method: POST
+- URL: /register
+- Payload:
+  { name, mobile, userType }
+- Used by registerForm.
+
+getDocumentsNameApi(mobile)
+- Method: GET
+- URL: /documents/:mobile
+- Used by Admin page and Customer document list page.
+
+addDocumentsApi(payload)
+- Method: POST
+- URL: /documents/add
+- Payload:
+  { adminMobile, mobile, documents }
+- Used by Admin page to assign documents.
+
+removeDocumentApi(mobile, docName, adminMobile)
+- Method: POST
+- URL: /documents/remove/:adminMobile/:mobile/:docName
+- Used by Admin page to remove assigned documents.
+
+
+Navigation Summary
+Public navigation:
+- PublicHeader logo -> /
+- Home -> /
+- About Us -> /aboutUsPage
+- Login -> /loginPage
+- Logout -> Firebase signOut, clear token, route to /
+
+Login navigation:
+- Admin -> /addDocuments
+- Existing Customer -> /docListPage
+- New Customer -> /registerForm
+
+Customer navigation:
+- /registerForm -> /docListPage after successful registration
+- /docListPage -> /inputFormPage after selecting document type
+
+Admin navigation:
+- /addDocuments is the main admin workspace
+
+
+Custom Hooks
+useCustomRouter
+File: src/customHooks/useCustomRouter.tsx
+
+Purpose:
+- Wraps Next.js useRouter.
+- Adds safe push() method.
+- Tracks queryString and pathComponent.
+
+useParams
+File: src/customHooks/useParams.tsx
+
+Purpose:
+- Reads router.query.
+- Converts query values into a plain object.
+- If a query value is an array, it uses the first value.
+
+
+Layout and Headers
+PublicHeader
+File: src/PageComponents/components/PublicHeader.tsx
+
+Used on public pages.
+Shows:
+- Logo
+- Home
+- About Us
+- Login or Logout depending on Firebase auth state
+- Mobile drawer menu
+
+Header
+File: src/PageComponents/components/Header.tsx
+
+Used on authenticated-style pages.
+Shows:
+- Logo
+- Login or Logout depending on Firebase auth state
+
+PageLayout
+File: src/layout/PageLayout.tsx
+
+Wraps pages with:
+- PublicHeader
+- Container content area
+- Footer
+
+
+Testing Setup
+Jest config:
+jest.config.ts
+
+Setup file:
+jest.setup.ts
+
+Test scripts:
+- npm test
+- npm run test:watch
+
+Current tests:
+1. src/pages/loginPage/index.test.tsx
+   Tests login page rendering.
+
+2. src/PageComponents/components/LoginForm.test.tsx
+   Tests:
+   - Mobile input is rendered.
+   - OTP input is rendered.
+   - Login button starts disabled.
+   - reCAPTCHA initialization.
+   - Entering 10-digit mobile sends OTP.
+   - Entering 6-digit OTP confirms OTP.
+   - Successful OTP enables Login button.
+
+Last verified command:
+npm test -- --runInBand
+
+Last known result:
+2 test suites passed, 4 tests passed.
+
+
+Important Known Gaps and Recommendations
+1. API auth headers
+   api.tsx imports axios directly. To use auth headers from src/axios.tsx,
+   import the configured Axios instance instead.
+
+2. Route protection
+   Role-based navigation exists, but visible client-side route guards are not
+   implemented. Backend must enforce authorization.
+
+3. Role source
+   Roles come from backend loginApi response, not Firebase custom claims.
+
+4. Query parameter security
+   mobile, adminMobile, userType, and documentType are passed in URL query
+   parameters. Backend must validate permissions using Firebase token.
+
+5. Document mappings
+   docListPage removes spaces from document names. getForm and getTemplate must
+   use matching names such as SampleOfferLetter.
+
+6. PDF preview mapping
+   Preview should use getTemplate if more document templates are added.
+
+7. Naming cleanup
+   Some names contain typos, such as removeDocumetApiUrl and Documnents.
+
+
+End-to-End Flow: Admin Assigns Documents
+1. Admin opens /loginPage.
+2. Admin enters mobile number.
+3. Firebase sends OTP.
+4. Admin enters OTP.
+5. OTP is confirmed.
+6. Admin submits login.
+7. Backend returns userType Admin.
+8. App routes to /addDocuments.
+9. Admin enters customer mobile.
+10. Existing customer documents are fetched.
+11. Admin adds document names.
+12. Admin submits assignment.
+13. Backend stores assignments.
+14. Admin can remove assigned documents.
+
+
+End-to-End Flow: Existing Customer Generates PDF
+1. Customer opens /loginPage.
+2. Customer enters mobile number.
+3. Firebase sends OTP.
+4. Customer enters OTP.
+5. OTP is confirmed.
+6. Customer submits login.
+7. Backend returns userType Customer and isExistingUser true.
+8. App routes to /docListPage.
+9. Assigned documents are fetched.
+10. Customer selects a document.
+11. App routes to /inputFormPage.
+12. Customer fills document form.
+13. Customer submits form.
+14. Dialog opens.
+15. Customer downloads or previews PDF.
+
+
+End-to-End Flow: New Customer Registers
+1. New user opens /loginPage.
+2. User completes Firebase OTP verification.
+3. User submits login.
+4. Backend says user does not exist.
+5. App routes to /registerForm.
+6. User enters full name.
+7. App calls registerApi with userType Customer.
+8. On success, app routes to /docListPage.
+
+
+Developer Commands
+Install dependencies:
+npm install
+
+Run development server:
+npm run dev
+
+Build:
+npm run build
+
+Run tests:
+npm test
+
+Run tests in one process:
+npm test -- --runInBand

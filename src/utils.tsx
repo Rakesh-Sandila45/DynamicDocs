@@ -28,7 +28,7 @@ export const efundzzCtcBreakUp = (yearlyCTC: number) => {
     monthlyMedicalAllowance: Math.floor(yearlyMedicalAllowance / 12),
     transportAllowanceMonthly: Math.floor(transportAllowanceYearly / 12),
     monthlyCompanyContributionToEPF: Math.floor(
-      yearlyCompanyContributionToEPF / 12
+      yearlyCompanyContributionToEPF / 12,
     ),
     monthlyPFDeduction: Math.floor(yearlyPFDeduction / 12),
     professionalTaxMonthly: Math.floor(professionalTaxYearly / 12),
@@ -57,13 +57,13 @@ export const getTemplate = (documentType: string, values: any) => {
       return <OfferLetter values={values} />;
 
     default:
-      return <OfferLetter />;
+      return <OfferLetter values={values} />;
   }
 };
 
 export const getDocumentname = (
   documentType: string,
-  name: string
+  name: string,
   // month: any,
   // year: any
 ) => {
@@ -94,7 +94,7 @@ export const getDocumentname = (
 };
 
 export const formatQueryParam = (
-  queryString: string[] | string | undefined
+  queryString: string[] | string | undefined,
 ) => {
   return Array.isArray(queryString) ? queryString[0] : queryString || "";
 };

@@ -63,12 +63,12 @@ export function LoginComponent() {
         if (response.userType == "Admin") {
           toast.success("Admin Login Successfull");
           router.push(
-            `/addDocuments?adminMobile=${values.mobile}&userType=${response.userType}`
+            `/addDocuments?adminMobile=${values.mobile}&userType=${response.userType}`,
           );
         } else if (response.userType == "Customer" && response.isExistingUser) {
           toast.success("Login Successfull");
           router.push(
-            `/docListPage?mobile=${values.mobile}&&userType=${response.userType}`
+            `/docListPage?mobile=${values.mobile}&&userType=${response.userType}`,
           );
         } else if (!response.isExistingUser) {
           router.push(`/registerForm?mobile=${values.mobile}`);
@@ -144,7 +144,7 @@ export function LoginComponent() {
         {
           size: "invisible",
           callback: () => {},
-        }
+        },
       );
     }
   };
