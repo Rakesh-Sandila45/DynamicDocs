@@ -247,14 +247,20 @@ const OfferLetter = (props: any) => {
             marginBottom: 10,
           }}
         >
-          <Image src="/vercel.svg" style={styles.logo} />
+          {/* <Image src="/vercel.svg" style={styles.logo} /> */}
           <Text
             style={{
               height: 40,
               width: 200,
               backgroundColor: "#000",
+              color: "#FFF",
+              textAlign: "center",
+              fontSize: "40px",
+              fontWeight: 600,
             }}
-          ></Text>
+          >
+            Your Logo
+          </Text>
         </View>
         <View style={styles.section}>
           <Text>{values.offerGeneratedDate}</Text>
@@ -326,7 +332,7 @@ const OfferLetter = (props: any) => {
             For dynamicDocs Technical Services Private Limited
           </Text>
           {/* <Image src="/icons/signature.png" style={styles.signature} /> */}
-          <Image src="/vercel.svg" style={styles.logo} />
+          {/* <Image src="/vercel.svg" style={styles.logo} /> */}
         </View>
         <View style={styles.section}>
           <Text>Authorized Signatory</Text>
@@ -348,7 +354,7 @@ const OfferLetter = (props: any) => {
             marginBottom: 10,
           }}
         >
-          <Image src="/vercel.svg" style={styles.logo} />
+          {/* <Image src="/vercel.svg" style={styles.logo} /> */}
           <Text
             style={{
               height: 40,
@@ -507,14 +513,14 @@ const OfferLetter = (props: any) => {
             <Text style={styles.col2}>
               {formatter.format(
                 Math.floor(
-                  values.ctc / 12 - ctcBreakdown.totalDeductionsMonthly
-                )
+                  values.ctc / 12 - ctcBreakdown.totalDeductionsMonthly,
+                ),
               )}
               .00
             </Text>
             <Text style={styles.col3}>
               {formatter.format(
-                values.ctc - ctcBreakdown.totalDeductionsYearly
+                values.ctc - ctcBreakdown.totalDeductionsYearly,
               )}
               .00{" "}
             </Text>

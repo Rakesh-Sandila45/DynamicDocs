@@ -1,7 +1,6 @@
 import React from "react";
 import { BlobProvider, PDFDownloadLink } from "@react-pdf/renderer";
 // import { saveAs } from "file-saver";
-import OfferLetter from "../../DocumentComponents/OfferLetter";
 import { Box, Button } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
 import LocalPrintshopIcon from "@mui/icons-material/LocalPrintshop";
@@ -9,6 +8,17 @@ import { getTemplate } from "@/utils";
 
 const PdfCard = (props: any) => {
   const { values, documentType } = props;
+  const pdfKey = React.useMemo(
+    () => `${documentType}-${JSON.stringify(values ?? {})}`,
+    [documentType, values],
+  );
+  const pdfDocument = React.useMemo(
+    () => getTemplate(documentType, values),
+    [documentType, values],
+  );
+  const fileName = values?.documentName?.trim()
+    ? values.documentName
+    : "document.pdf";
 
   // const trackDownloads = async () => {
   //   const payload = {
@@ -20,10 +30,11 @@ const PdfCard = (props: any) => {
   return (
     <Box sx={{ display: "flex" }}>
       <PDFDownloadLink
-        document={getTemplate(documentType, values)}
+        key={`download-${pdfKey}`}
+        document={pdfDocument}
         // fileName={`Offer Letter-${values.name} ${month}-${year}`}
         // fileName={getDocumentname(documentType,values.name)}
-        fileName={values.documentName}
+        fileName={fileName}
       >
         <Button
           variant="contained"
@@ -35,7 +46,7 @@ const PdfCard = (props: any) => {
           Download
         </Button>
       </PDFDownloadLink>
-      <BlobProvider document={<OfferLetter values={values} />}>
+      <BlobProvider key={`preview-${pdfKey}`} document={pdfDocument}>
         {/* {({ url, blob }) => (
           <a href={url} target="_blank" rel="noreferrer">
             <Button

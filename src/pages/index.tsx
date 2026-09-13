@@ -39,7 +39,6 @@ const HomePage: React.FC = () => {
   return (
     <Box>
       <PublicHeader />
-      {/* Hero Section */}
       <Box
         sx={{
           backgroundColor: "#fff",
@@ -83,7 +82,6 @@ const HomePage: React.FC = () => {
         </Box>
       </Box>
 
-      {/* How It Works */}
       <Box sx={{ py: 8, backgroundColor: "#ffffff", px: 5 }}>
         <Box>
           <Typography
@@ -156,7 +154,6 @@ const HomePage: React.FC = () => {
         </Box>
       </Box>
 
-      {/* Features Section */}
       <Box sx={{ py: 8, backgroundColor: "#f9f9f9", px: 5 }}>
         <Box>
           <Typography
@@ -249,7 +246,6 @@ const HomePage: React.FC = () => {
         </Box>
       </Box>
 
-      {/* Testimonials */}
       <Box sx={{ py: 8, backgroundColor: "#ffffff" }}>
         <Box>
           <Typography
@@ -310,7 +306,6 @@ const HomePage: React.FC = () => {
         </Box>
       </Box>
 
-      {/* FAQ Section */}
       <Box sx={{ py: 8, backgroundColor: "#f9f9f9" }}>
         <Box
           sx={{
@@ -365,7 +360,7 @@ const HomePage: React.FC = () => {
           </Grid2>
         </Box>
       </Box>
-      {/* Footer */}
+
       <Footer />
     </Box>
   );
